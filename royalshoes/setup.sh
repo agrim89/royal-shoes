@@ -6,7 +6,7 @@ function eval_in_virtual_environment {
 
     VIRTUALENV_NAME=env
     if [ ! -d ${VIRTUALENV_NAME} ]; then
-      virtualenv ${VIRTUALENV_NAME} -p python3.6
+      virtualenv ${VIRTUALENV_NAME} -p python3
     fi
 
     source ${VIRTUALENV_NAME}/bin/activate
