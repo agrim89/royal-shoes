@@ -29,12 +29,12 @@ BASE_DIR = os.path.dirname(os.path.dirname(os.path.abspath(__file__)))
 
 # SECURITY WARNING: keep the secret key used in production secret!
 # SECURITY WARNING: keep the secret key used in production secret!
-SECRET_KEY = env('SECRET_KEY')
+SECRET_KEY = "dl&)(n-z!^4*du2#jkg%2wfup8h-n_5in%*l7qx@4i(l#0skk4"
 
 # SECURITY WARNING: don't run with debug turned on in production!
-DEBUG = True if env('DEBUG') is not False else False
+DEBUG = True
 
-ALLOWED_HOSTS = env('ALLOWED_HOSTS').split(',')
+ALLOWED_HOSTS = []
 
 VCAP_SERVICES = loads(env('system_env_json', '{}')).get('VCAP_SERVICES', {})
 DEFAULT_DATABASE_URL = env('DATABASE_URL', "sqlite:///db.sqlite3")
@@ -138,7 +138,8 @@ USE_TZ = True
 
 STATIC_URL = '/static/'
 STATIC_ROOT = os.path.join(BASE_DIR, 'static')
-STATICFILES_STORAGE = 'whitenoise.django.GzipManifestStaticFilesStorage'
+STATICFILES_DIRS = ["/Users/agrim/royal-shoes/static"]
+# STATICFILES_STORAGE = 'whitenoise.django.GzipManifestStaticFilesStorage'
 
 REST_FRAMEWORK = {
     'DEFAULT_PERMISSION_CLASSES': [],

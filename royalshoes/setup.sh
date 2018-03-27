@@ -6,14 +6,11 @@ function eval_in_virtual_environment {
 
     VIRTUALENV_NAME=env
     if [ ! -d ${VIRTUALENV_NAME} ]; then
-      virtualenv ${VIRTUALENV_NAME} -p python3
+      virtualenv ${VIRTUALENV_NAME} -p python3.6
     fi
 
     source ${VIRTUALENV_NAME}/bin/activate
 
-    export ALLOWED_HOSTS="*"
-    export DEBUG="False"
-    export SECRET_KEY="dl&)(n-z!^4*du2#jkg%2wfup8h-n_5in%*l7qx@4i(l#0skk4"
     export PORT=8001
 
     pip install --upgrade pip
