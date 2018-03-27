@@ -11,8 +11,16 @@ https://docs.djangoproject.com/en/2.0/ref/settings/
 """
 
 import os
+from json import loads
 
+import dj_database_url
+
+
+def env(key, default=""):
+    return os.environ.get(key, default)
 # Build paths inside the project like this: os.path.join(BASE_DIR, ...)
+
+
 BASE_DIR = os.path.dirname(os.path.dirname(os.path.abspath(__file__)))
 
 
@@ -20,13 +28,20 @@ BASE_DIR = os.path.dirname(os.path.dirname(os.path.abspath(__file__)))
 # See https://docs.djangoproject.com/en/2.0/howto/deployment/checklist/
 
 # SECURITY WARNING: keep the secret key used in production secret!
-SECRET_KEY = '!g6=(br&*p^gm+zkeo&)2x=itdm@!&$mk9-)ttel9ty)omnb#k'
+# SECURITY WARNING: keep the secret key used in production secret!
+SECRET_KEY = env('SECRET_KEY')
 
 # SECURITY WARNING: don't run with debug turned on in production!
-DEBUG = True
+DEBUG = True if env('DEBUG') is not False else False
 
-ALLOWED_HOSTS = []
+ALLOWED_HOSTS = env('ALLOWED_HOSTS').split(',')
 
+VCAP_SERVICES = loads(env('system_env_json', '{}')).get('VCAP_SERVICES', {})
+DEFAULT_DATABASE_URL = env('DATABASE_URL', "sqlite:///db.sqlite3")
+ELEPHANT_SQL_DICTIONARY = VCAP_SERVICES.get('elephantsql', {})
+ELEPHANT_SQL_CREDENTIALS = ELEPHANT_SQL_DICTIONARY.get('credentials', {})
+DATABASE_URL = ELEPHANT_SQL_CREDENTIALS.get('uri', DEFAULT_DATABASE_URL)
+os.environ.setdefault("DATABASE_URL", DATABASE_URL)
 
 # Application definition
 
@@ -75,12 +90,14 @@ WSGI_APPLICATION = 'royalshoes.wsgi.application'
 # Database
 # https://docs.djangoproject.com/en/2.0/ref/settings/#databases
 
-DATABASES = {
-    'default': {
-        'ENGINE': 'django.db.backends.sqlite3',
-        'NAME': os.path.join(BASE_DIR, 'db.sqlite3'),
-    }
-}
+DATABASES = {'default': dj_database_url.config()}  # DATABASE_URL
+#
+# DATABASES = {
+#     'default': {
+#         'ENGINE': 'django.db.backends.sqlite3',
+#         'NAME': os.path.join(BASE_DIR, 'db.sqlite3'),
+#     }
+# }
 
 
 # Password validation
@@ -120,3 +137,15 @@ USE_TZ = True
 # https://docs.djangoproject.com/en/2.0/howto/static-files/
 
 STATIC_URL = '/static/'
+STATIC_ROOT = os.path.join(BASE_DIR, 'static')
+STATICFILES_STORAGE = 'whitenoise.django.GzipManifestStaticFilesStorage'
+
+REST_FRAMEWORK = {
+    'DEFAULT_PERMISSION_CLASSES': [],
+    'DEFAULT_AUTHENTICATION_CLASSES': [],
+    'PAGINATE_BY': 100,
+    'DEFAULT_RENDERER_CLASSES': (
+        'rest_framework.renderers.JSONRenderer',
+        # 'doc.api.forms.BrowsableAPIRendererWithoutForms',
+    ),
+}

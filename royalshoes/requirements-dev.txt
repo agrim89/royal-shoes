@@ -1,0 +1,13 @@
+--no-index
+--find-links vendor-dev/
+
+django-extensions==1.9.8
+six==1.11.0
+typing==3.6.2
+flake8==3.5.0
+mccabe==0.6.1
+pycodestyle==2.3.1
+pyflakes==1.6.0
+beautifulsoup4==4.6.0
+WebOb==1.7.4
+waitress==1.1.0

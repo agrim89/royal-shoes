@@ -1,0 +1,8 @@
+--no-index
+--find-links vendor/
+
+django
+djangorestframework
+gunicorn
+whitenoise
+dj-database-url
