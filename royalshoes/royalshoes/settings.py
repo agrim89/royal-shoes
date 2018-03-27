@@ -34,7 +34,7 @@ SECRET_KEY = "dl&)(n-z!^4*du2#jkg%2wfup8h-n_5in%*l7qx@4i(l#0skk4"
 # SECURITY WARNING: don't run with debug turned on in production!
 DEBUG = True
 
-ALLOWED_HOSTS = []
+ALLOWED_HOSTS = ["*"]
 
 VCAP_SERVICES = loads(env('system_env_json', '{}')).get('VCAP_SERVICES', {})
 DEFAULT_DATABASE_URL = env('DATABASE_URL', "sqlite:///db.sqlite3")
