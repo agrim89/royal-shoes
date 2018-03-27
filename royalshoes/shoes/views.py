@@ -85,7 +85,6 @@ class AddToCartViewSet(APIView):
 
     def get(self, request):
         try:
-            import pdb;pdb.set_trace()
             response = []
             id = request.GET['id']
             user = Registration.objects.get(id=id)
