@@ -90,9 +90,11 @@ class ValidateViewSet(APIView):
             mobile = request.data["mobile"]
             password = request.data["password"]
             Registration.objects.get(mobile=mobile, password=password)
-            return Response(status=status.HTTP_200_OK)
+            payload = dict(message="login successful")
+            return Response(payload, status=status.HTTP_200_OK)
         except Exception:
-            return Response(status=status.HTTP_404_NOT_FOUND)
+            payload = dict(message="login fail")
+            return Response(payload, status=status.HTTP_404_NOT_FOUND)
 
 
 class CompanyDetailViewSet(APIView):
@@ -145,7 +147,8 @@ class AddToCartViewSet(APIView):
             payload = dict(shoes = response)
             return Response(payload, status=status.HTTP_200_OK)
         except Exception:
-            return Response(status=status.HTTP_404_NOT_FOUND)
+            payload = dict(message="User")
+            return Response(payload, status=status.HTTP_404_NOT_FOUND)
 
     def post(self, request):
         try:
