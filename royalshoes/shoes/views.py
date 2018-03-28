@@ -49,7 +49,7 @@ class ForgotPassword(APIView):
         # except Exception:
         else:
             payload["message"] = "User Not Found"
-            return Response(payload, status=status.HTTP_404_NOT_FOUND)
+            return Response(payload, status=status.HTTP_400_BAD_REQUEST)
 
 
 class RegisterViewSet(APIView):
