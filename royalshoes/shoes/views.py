@@ -45,7 +45,7 @@ class ForgotPassword(APIView):
             return Response(payload, status=status.HTTP_200_OK)
         except Exception:
             payload["message"] = "User Not Found"
-            return Response(dict(payload, status=status.HTTP_404_NOT_FOUND))
+            return Response(payload, status=status.HTTP_404_NOT_FOUND)
 
 
 class RegisterViewSet(APIView):
