@@ -87,7 +87,7 @@ class RegisterViewSet(APIView):
             serializer.save()
             return Response({"message": "Update successful"}, status=status.HTTP_200_OK)
         else:
-            return Response({"error":serializer.errors,"message": "Update failed" }, status=status.HTTP_400_BAD_REQUEST)
+            return Response({"error":serializer.errors,"message": "Update failed", "status":status.HTTP_400_BAD_REQUEST}#, status=status.HTTP_400_BAD_REQUEST)
 
 
 class ValidateViewSet(APIView):
