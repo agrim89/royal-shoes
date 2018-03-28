@@ -16,11 +16,17 @@ class RegisterViewSet(APIView):
             raise Http404
 
     def post(self, request, format=None):
-        serializer = RegisterSerializer(data=request.data)
-        if serializer.is_valid():
-            serializer.save()
-            return Response(serializer.data, status=status.HTTP_201_CREATED)
-        return Response(serializer.errors, status=status.HTTP_400_BAD_REQUEST)
+        try:
+            mobile = request.data['mobile']
+            Registration.objects.get(mobile=mobile)
+            response = dict(message='User already exists')
+            return Response(response, status=status.HTTP_302_FOUND)
+        except Exception:
+            serializer = RegisterSerializer(data=request.data)
+            if serializer.is_valid():
+                serializer.save()
+                return Response(serializer.data, status=status.HTTP_201_CREATED)
+            return Response(serializer.errors, status=status.HTTP_400_BAD_REQUEST)
 
     def put(self, request, format=None):
         mobile = request.data["mobile"]
