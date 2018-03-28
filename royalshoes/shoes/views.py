@@ -34,10 +34,10 @@ class PasswordUpdate(APIView):
 class ForgotPassword(APIView):
     def post(self, request):
         payload = {}
-        # try:
-        mobile = request.data["mobile"]
-        user = Registration.objects.filter(mobile=mobile)
-        if user:
+        try:
+            mobile = request.data["mobile"]
+            user = Registration.objects.filter(mobile=mobile)
+
             email = EmailMessage('Royal Shoes Password Request',
                                  'Please find the below password \n '
                                  '{password}'.format(password=user[
@@ -46,9 +46,9 @@ class ForgotPassword(APIView):
             email.send()
             payload["message"]="Your password has been sent to your registered email."
             payload['status'] = status.HTTP_200_OK
-            return Response(payload, status=status.HTTP_200_OK)
-        # except Exception:
-        else:
+            return Response(payload)#, status=status.HTTP_200_OK)
+        except Exception:
+
             payload["message"] = "User Not Found"
             payload['status'] = status.HTTP_400_BAD_REQUEST
             return Response(payload)#, status=status.HTTP_400_BAD_REQUEST)
