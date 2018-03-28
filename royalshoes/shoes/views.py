@@ -3,7 +3,7 @@ from rest_framework import status
 from rest_framework.response import Response
 from rest_framework.views import APIView
 from django.http import Http404
-from .serailizer import RegisterSerializer, CompanySerializer, AddToCartSerializer, ShoeSerializer, BannerSerializer
+from .serailizer import RegisterSerializer, CompanySerializer, AddToCartSerializer, ShoeSerializer, BannerSerializer, UserSerializer
 import datetime
 
 
@@ -14,6 +14,10 @@ class RegisterViewSet(APIView):
             return Registration.objects.get(mobile=mobile)
         except Exception:
             raise Http404
+
+    def get(self, request):
+        user = self.get_object(request.GET['mobile'])
+        return Response(RegisterSerializer(user).data, status=status.HTTP_200_OK)
 
     def post(self, request, format=None):
         try:
