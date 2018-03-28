@@ -40,8 +40,9 @@ class ForgotPassword(APIView):
         if user:
             email = EmailMessage('Royal Shoes Password Request',
                                  'Please find the below password \n '
-                                 '{password}'.format(password=user.password),
-                                 to=[user.email])
+                                 '{password}'.format(password=user[
+                                     0].password),
+                                 to=[user[0].email])
             email.send()
             payload["message"]="Your password has been sent to your registered email."
             return Response(payload, status=status.HTTP_200_OK)
