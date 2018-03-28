@@ -3,7 +3,8 @@ from rest_framework import status
 from rest_framework.response import Response
 from rest_framework.views import APIView
 from django.http import Http404
-from .serailizer import RegisterSerializer, CompanySerializer, AddToCartSerializer, ShoeSerializer, BannerSerializer, UserSerializer
+from .serailizer import RegisterSerializer, CompanySerializer, \
+    AddToCartSerializer, ShoeSerializer, BannerSerializer, UserSerializer
 import datetime
 from django.core.mail import EmailMessage
 
@@ -33,17 +34,19 @@ class PasswordUpdate(APIView):
 class ForgotPassword(APIView):
     def post(self, request):
         payload = {}
-        try:
-            mobile = request.data["mobile"]
-            user = Registration.objects.get(mobile=mobile)
-            print(user)
+        # try:
+        mobile = request.data["mobile"]
+        user = Registration.objects.filter(mobile=mobile)
+        if user:
             email = EmailMessage('Royal Shoes Password Request',
-                                 'Please find the below password \n {password}'.format(password=user.password),
+                                 'Please find the below password \n '
+                                 '{password}'.format(password=user.password),
                                  to=[user.email])
             email.send()
             payload["message"]="Your password has been sent to your registered email."
             return Response(payload, status=status.HTTP_200_OK)
-        except Exception:
+        # except Exception:
+        else:
             payload["message"] = "User Not Found"
             return Response(payload, status=status.HTTP_404_NOT_FOUND)
 
