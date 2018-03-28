@@ -87,14 +87,20 @@ class ValidateViewSet(APIView):
 
     def post(self, request):
         try:
+            import pdb;pdb.set_trace()
             mobile = request.data["mobile"]
             password = request.data["password"]
-            Registration.objects.get(mobile=mobile, password=password)
-            payload = dict(message="login successful")
-            return Response(payload, status=status.HTTP_200_OK)
+            user = Registration.objects.filter(mobile=mobile, password=password)
+            validate = Registration.objects.filter(mobile=mobile)
+            if user and validate:
+                payload = dict(message="login successful")
+                return Response(payload, status=status.HTTP_200_OK)
+            elif not validate:
+                payload = dict(message="user not found")
+                return Response(payload, status=status.HTTP_404_NOT_FOUND)
         except Exception:
             payload = dict(message="login fail")
-            return Response(payload, status=status.HTTP_404_NOT_FOUND)
+            return Response(payload, status=status.HTTP_400_BAD_REQUEST)
 
 
 class CompanyDetailViewSet(APIView):
