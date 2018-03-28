@@ -46,6 +46,7 @@ os.environ.setdefault("DATABASE_URL", DATABASE_URL)
 # Application definition
 
 INSTALLED_APPS = [
+    "jet",
     "rest_framework",
     "shoes",
     'django.contrib.admin',

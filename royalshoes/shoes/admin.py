@@ -1,4 +1,6 @@
 from django.contrib import admin
+from django.contrib.admin import AdminSite
+from django.utils.translation import ugettext_lazy
 from .models import Registration, ShoeList, CompanyList, AddToCart, CompanyBanner
 
 
@@ -22,8 +24,21 @@ class AddToCartAdmin(admin.ModelAdmin):
     list_display = ('user', 'shoe', 'items')
 
 
-admin.site.register(Registration, RegisterAdmin)
-admin.site.register(ShoeList, ShoeAdmin)
-admin.site.register(CompanyList, CompanyAdmin)
-admin.site.register(AddToCart, AddToCartAdmin)
-admin.site.register(CompanyBanner, CompanyBannerAdmin)
+class RoyalShoesAdminSite(AdminSite):
+    # Text to put at the end of each page's <title>.
+    site_title = ugettext_lazy('Royal Shoes Admin')
+
+    # Text to put in each page's <h1> (and above login form).
+    site_header = ugettext_lazy('Royal Shoes administration')
+
+    # Text to put at the top of the admin index page.
+    index_title = ugettext_lazy('Royal Shoes administration')
+
+
+admin_site = RoyalShoesAdminSite()
+
+admin_site.register(Registration, RegisterAdmin)
+admin_site.register(ShoeList, ShoeAdmin)
+admin_site.register(CompanyList, CompanyAdmin)
+admin_site.register(AddToCart, AddToCartAdmin)
+admin_site.register(CompanyBanner, CompanyBannerAdmin)

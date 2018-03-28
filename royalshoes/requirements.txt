@@ -6,3 +6,4 @@ djangorestframework
 gunicorn
 whitenoise
 dj-database-url
+coreapi
