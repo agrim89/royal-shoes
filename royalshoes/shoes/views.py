@@ -5,7 +5,7 @@ from rest_framework.views import APIView
 from django.http import Http404
 from .serailizer import RegisterSerializer, CompanySerializer, AddToCartSerializer, ShoeSerializer, BannerSerializer,\
     UserSerializer
-
+import datetime
 
 class RegisterViewSet(APIView):
 
@@ -103,7 +103,8 @@ class AddToCartViewSet(APIView):
             items = request.data['items']
             user = Registration.objects.get(id=user_id)
             shoes = ShoeList.objects.get(id=shoe_id)
-            serializer = AddToCart(user=user, items=items, shoe=shoes, price=shoes.price * items)
+            serializer = AddToCart(user=user, items=items, shoe=shoes, price=shoes.price * items,
+                                   date=datetime.datetime.now().date())
             serializer.save()
             return Response(AddToCartSerializer(serializer).data, status=status.HTTP_201_CREATED)
         except Exception:
@@ -116,6 +117,7 @@ class AddToCartViewSet(APIView):
             items = request.data.get("items", cart.items)
             cart.price = items * cart.shoe.price
             cart.items = items
+            cart.date = datetime.datetime.now().date()
             cart.save()
             return Response(AddToCartSerializer(cart).data, status=status.HTTP_202_ACCEPTED)
         except Exception:

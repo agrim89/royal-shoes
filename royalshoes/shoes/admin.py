@@ -21,7 +21,7 @@ class CompanyAdmin(admin.ModelAdmin):
 
 
 class AddToCartAdmin(admin.ModelAdmin):
-    list_display = ('user', 'shoe', 'items')
+    list_display = ('user', 'shoe', 'items', 'date')
 
 
 class RoyalShoesAdminSite(AdminSite):

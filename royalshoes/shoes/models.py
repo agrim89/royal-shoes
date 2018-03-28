@@ -74,6 +74,7 @@ class AddToCart(models.Model):
     user = models.ForeignKey(to=Registration, on_delete=models.CASCADE)
     items = models.IntegerField()
     price = models.IntegerField()
+    date = models.DateField()
     status = models.BooleanField(default=True)
 
     class Meta:
