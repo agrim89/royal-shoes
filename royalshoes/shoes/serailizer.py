@@ -7,7 +7,7 @@ class RegisterSerializer(serializers.ModelSerializer):
     mobile = serializers.CharField(max_length=10)
     email = serializers.EmailField(required=False)
     dob = serializers.DateField(required=False)
-    password = serializers.CharField(max_length=50, required=False)
+    password = serializers.CharField(max_length=50)
 
     class Meta:
         model = Registration
