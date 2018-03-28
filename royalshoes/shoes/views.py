@@ -45,11 +45,13 @@ class ForgotPassword(APIView):
                                  to=[user[0].email])
             email.send()
             payload["message"]="Your password has been sent to your registered email."
+            payload['status'] = status.HTTP_200_OK
             return Response(payload, status=status.HTTP_200_OK)
         # except Exception:
         else:
             payload["message"] = "User Not Found"
-            return Response(payload, status=status.HTTP_400_BAD_REQUEST)
+            payload['status'] = status.HTTP_400_BAD_REQUEST
+            return Response(payload)#, status=status.HTTP_400_BAD_REQUEST)
 
 
 class RegisterViewSet(APIView):
@@ -97,14 +99,14 @@ class ValidateViewSet(APIView):
             user = Registration.objects.filter(mobile=mobile, password=password)
             validate = Registration.objects.filter(mobile=mobile)
             if user and validate:
-                payload = dict(message="login successful", status=status.HTTP_200_OK)
-                return Response(payload)#, status=status.HTTP_200_OK)
+                payload = dict(message="login successful")
+                return Response(payload, status=status.HTTP_200_OK)
             elif not validate:
-                payload = dict(message="user not found",  status=status.HTTP_404_NOT_FOUND)
-                return Response(payload)#, status=status.HTTP_404_NOT_FOUND)
+                payload = dict(message="user not found")
+                return Response(payload, status=status.HTTP_404_NOT_FOUND)
         except Exception:
-            payload = dict(message="login fail", status=status.HTTP_400_BAD_REQUEST)
-            return Response(payload)#, status=status.HTTP_400_BAD_REQUEST)
+            payload = dict(message="login fail")
+            return Response(payload, status=status.HTTP_400_BAD_REQUEST)
 
 
 class CompanyDetailViewSet(APIView):
