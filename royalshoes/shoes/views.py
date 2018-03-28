@@ -5,6 +5,45 @@ from rest_framework.views import APIView
 from django.http import Http404
 from .serailizer import RegisterSerializer, CompanySerializer, AddToCartSerializer, ShoeSerializer, BannerSerializer, UserSerializer
 import datetime
+from django.core.mail import EmailMessage
+
+
+class PasswordUpdate(APIView):
+    def get_object(self, mobile, old):
+        try:
+            return Registration.objects.get(mobile=mobile, password=old)
+        except Exception:
+            raise Http404
+
+    def post(self, request):
+        try:
+            mobile = request.data['mobile']
+            old = request.data['old_pass']
+            new = request.data['new_pass']
+            user = self.get_object(mobile, old)
+            user.password = new
+            user.save()
+            response = dict(message='Password Reset Success')
+            return Response(response, status=status.HTTP_200_OK)
+        except Exception:
+            response = dict(message='Old Password Did not match')
+            return Response(response, status=status.HTTP_400_BAD_REQUEST)
+
+
+class ForgotPassword(APIView):
+    def post(self, request):
+        try:
+            mobile = request.data["mobile"]
+            user = Registration.objects.get(mobile=mobile)
+            email = EmailMessage('Royal Shoes Password Request',
+                                 'Please find the below password \n {password}'.format(password=user.password),
+                                 to=[user.email])
+            email.send()
+
+            return Response(dict(payload={}, message="Your password has been sent to your registered email.",
+                                 status=status.HTTP_200_OK))
+        except Exception:
+            return Response(dict(payload={}, message="User Not Found", status=status.HTTP_404_NOT_FOUND))
 
 
 class RegisterViewSet(APIView):
