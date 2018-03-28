@@ -93,7 +93,6 @@ class ValidateViewSet(APIView):
 
     def post(self, request):
         try:
-            import pdb;pdb.set_trace()
             mobile = request.data["mobile"]
             password = request.data["password"]
             user = Registration.objects.filter(mobile=mobile, password=password)
