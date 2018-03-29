@@ -136,6 +136,14 @@ class CompanyDetailViewSet(APIView):
 
 
 class ShoesViewSet(APIView):
+    def get(self, request):
+        id = request.GET['id']
+        shoe = ShoeList.objects.filter(id=id)
+        if shoe:
+            shoe = shoe[0]
+            return Response(ShoeSerializer(shoe).data, status=status.HTTP_200_OK)
+        else:
+            return Response(dict(message='Please try again later'), status=status.HTTP_400_BAD_REQUEST)
 
     def post(self, request):
         try:
