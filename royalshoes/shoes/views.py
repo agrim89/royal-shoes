@@ -166,8 +166,7 @@ class AddToCartViewSet(APIView):
                     values = ShoeSerializer(d.shoe).data
                     values['quantity'] = d.items
                     response.append(values)
-                payload = dict(shoes = response)
-                return Response(payload, status=status.HTTP_200_OK)
+                return Response(response, status=status.HTTP_200_OK)
             else:
                 return Response(dict(message='No items in cart. Please add to view.'), status=status.HTTP_200_OK)
         except Exception:
