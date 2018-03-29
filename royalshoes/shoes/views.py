@@ -165,6 +165,7 @@ class AddToCartViewSet(APIView):
                 for d in cart:
                     values = ShoeSerializer(d.shoe).data
                     values['quantity'] = d.items
+                    values['cart_id'] = d.id
                     response.append(values)
                 return Response(response, status=status.HTTP_200_OK)
             else:
@@ -196,7 +197,6 @@ class AddToCartViewSet(APIView):
 
     def put(self, request):
         try:
-            import pdb;pdb.set_trace()
             id = request.data['id']
             cart = AddToCart.objects.get(id=id)
             items = int(request.data.get("quantity", cart.items))
