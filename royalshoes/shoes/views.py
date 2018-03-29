@@ -64,12 +64,12 @@ class RegisterViewSet(APIView):
 
     def get(self, request):
         try:
-            mobile = request.data["mobile"]
+            mobile = request.GET["mobile"]
             user = Registration.objects.filter(mobile=mobile)
-            return Response(RegisterSerializer(user).data, status=status.HTTP_200_OK)
+            return Response(RegisterSerializer(user[0]).data, status=status.HTTP_200_OK)
         except Exception:
             return Response({"message": "Detail not found", "status":status.HTTP_400_BAD_REQUEST})
-        
+
     def post(self, request, format=None):
         try:
             mobile = request.data['mobile']
