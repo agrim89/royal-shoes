@@ -200,7 +200,7 @@ class AddToCartViewSet(APIView):
             id = request.data['id']
             cart = AddToCart.objects.get(id=id)
             items = int(request.data.get("quantity", cart.items))
-            cart.items = cart.items + items
+            cart.items = items
             cart.price = cart.items * cart.shoe.price
 
             cart.date = datetime.datetime.now().date()
