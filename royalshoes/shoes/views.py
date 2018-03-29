@@ -157,7 +157,9 @@ class AddToCartViewSet(APIView):
             user = Registration.objects.get(mobile=id)
             cart = AddToCart.objects.filter(user=user, status=True)
             for d in cart:
-                response.append(ShoeSerializer(d.shoe).data)
+                values = ShoeSerializer(d.shoe).data
+                values['quantity'] = d.items
+                response.append(values)
             payload = dict(shoes = response)
             return Response(payload, status=status.HTTP_200_OK)
         except Exception:
@@ -166,23 +168,31 @@ class AddToCartViewSet(APIView):
 
     def post(self, request):
         try:
+            import pdb;pdb.set_trace()
             mobile = request.data["mobile"]
             shoe_id = request.data["shoe"]
-            items = request.data['quantity']
+            items = int(request.data['quantity'])
             user = Registration.objects.get(mobile=mobile)
             shoes = ShoeList.objects.get(id=shoe_id)
-            serializer = AddToCart(user=user, items=items, shoe=shoes, price=shoes.price * items,
-                                   date=datetime.datetime.now().date())
-            serializer.save()
+            values = AddToCart.objects.filter(user=user, shoe=shoes)[0]
+            if values:
+                values.items = values.items + items
+                values.save()
+                return Response(AddToCartSerializer(values).data, status=status.HTTP_201_CREATED)
+            else:
+                serializer = AddToCart(user=user, items=items, shoe=shoes, price=shoes.price * items,
+                                       date=datetime.datetime.now().date())
+                serializer.save()
             return Response(AddToCartSerializer(serializer).data, status=status.HTTP_201_CREATED)
         except Exception:
             return Response(status=status.HTTP_404_NOT_FOUND)
 
     def put(self, request):
         try:
+            import pdb;pdb.set_trace()
             id = request.data['id']
-            cart = self.get_object(id)
-            items = request.data.get("quantity", cart.items)
+            cart = AddToCart.objects.get(id=id)
+            items = int(request.data.get("quantity", cart.items))
             cart.price = items * cart.shoe.price
             cart.items = items
             cart.date = datetime.datetime.now().date()
