@@ -35,10 +35,11 @@ class ForgotPassword(APIView):
     def post(self, request):
         import pdb;pdb.set_trace()
         payload = {}
-        try:
-            mobile = request.data["mobile"]
-            user = Registration.objects.filter(mobile=mobile)[0]
-
+        # try:
+        mobile = request.data["mobile"]
+        user = Registration.objects.filter(mobile=mobile)
+        if user:
+            user = user[0]
             email = EmailMessage('Royal Shoes Password Request',
                                  'Please find the below password \n '
                                  '{password}'.format(password=user.password),
@@ -47,8 +48,8 @@ class ForgotPassword(APIView):
             payload["message"]="Your password has been sent to your registered email."
             payload['status'] = status.HTTP_200_OK
             return Response(payload)#, status=status.HTTP_200_OK)
-        except Exception:
-
+        # except Exception:
+        else:
             payload["message"] = "User Not Found"
             payload['status'] = status.HTTP_400_BAD_REQUEST
             return Response(payload)#, status=status.HTTP_400_BAD_REQUEST)
@@ -63,14 +64,18 @@ class RegisterViewSet(APIView):
             return
 
     def get(self, request):
-        try:
-            mobile = request.GET["mobile"]
-            user = Registration.objects.filter(mobile=mobile)[0]
+        # try:
+        mobile = request.GET["mobile"]
+        user = Registration.objects.filter(mobile=mobile)
+        if user:
+            user = user[0]
             values = RegisterSerializer(user).data
             values['status'] = status.HTTP_200_OK
             return Response(values)
-        except Exception:
-            return Response({"message": "Detail not found", "status":status.HTTP_400_BAD_REQUEST})
+        else:
+            return Response({"message": "Detail not found", "status": status.HTTP_400_BAD_REQUEST})
+        # except Exception:
+        #     return Response({"message": "Detail not found", "status":status.HTTP_400_BAD_REQUEST})
 
     def post(self, request, format=None):
         try:
@@ -171,14 +176,14 @@ class AddToCartViewSet(APIView):
 
     def post(self, request):
         try:
-            import pdb;pdb.set_trace()
             mobile = request.data["mobile"]
             shoe_id = request.data["shoe"]
             items = int(request.data['quantity'])
             user = Registration.objects.get(mobile=mobile)
             shoes = ShoeList.objects.get(id=shoe_id)
-            values = AddToCart.objects.filter(user=user, shoe=shoes)[0]
+            values = AddToCart.objects.filter(user=user, shoe=shoes)
             if values:
+                values = values[0]
                 values.items = values.items + items
                 values.save()
                 return Response(AddToCartSerializer(values).data, status=status.HTTP_201_CREATED)
