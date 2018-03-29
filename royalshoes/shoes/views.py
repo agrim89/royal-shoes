@@ -91,7 +91,7 @@ class RegisterViewSet(APIView):
         serializer = RegisterSerializer(snippet, data=request.data)
         if serializer.is_valid():
             serializer.save()
-            return Response({"message": "Update successful"}, status=status.HTTP_200_OK)
+            return Response({"message": "Update successful", 'status': status.HTTP_200_OK})
         else:
             return Response({"error":serializer.errors,"message": "Update failed", "status":status.HTTP_400_BAD_REQUEST})#, status=status.HTTP_400_BAD_REQUEST)
 
@@ -99,18 +99,19 @@ class RegisterViewSet(APIView):
 class ValidateViewSet(APIView):
 
     def post(self, request):
-        try:
-            mobile = request.data["mobile"]
-            password = request.data["password"]
-            user = Registration.objects.filter(mobile=mobile, password=password)
-            validate = Registration.objects.filter(mobile=mobile)
-            if user and validate:
-                payload = dict(message="login successful")
-                return Response(payload, status=status.HTTP_200_OK)
-            elif not validate:
-                payload = dict(message="user not found")
-                return Response(payload, status=status.HTTP_404_NOT_FOUND)
-        except Exception:
+        # try:
+        mobile = request.data["mobile"]
+        password = request.data["password"]
+        user = Registration.objects.filter(mobile=mobile, password=password)
+        validate = Registration.objects.filter(mobile=mobile)
+        if user and validate:
+            payload = dict(message="login successful")
+            return Response(payload, status=status.HTTP_200_OK)
+        elif not validate:
+            payload = dict(message="user not found")
+            return Response(payload, status=status.HTTP_404_NOT_FOUND)
+        # except Exception:
+        else:
             payload = dict(message="login fail")
             return Response(payload, status=status.HTTP_400_BAD_REQUEST)
 
