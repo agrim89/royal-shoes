@@ -196,6 +196,7 @@ class AddToCartViewSet(APIView):
 
     def put(self, request):
         try:
+            import pdb;pdb.set_trace()
             id = request.data['id']
             cart = AddToCart.objects.get(id=id)
             items = int(request.data.get("quantity", cart.items))
