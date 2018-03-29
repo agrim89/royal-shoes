@@ -36,13 +36,12 @@ class ForgotPassword(APIView):
         payload = {}
         try:
             mobile = request.data["mobile"]
-            user = Registration.objects.filter(mobile=mobile)
+            user = Registration.objects.filter(mobile=mobile)[0]
 
             email = EmailMessage('Royal Shoes Password Request',
                                  'Please find the below password \n '
-                                 '{password}'.format(password=user[
-                                     0].password),
-                                 to=[user[0].email])
+                                 '{password}'.format(password=user.password),
+                                 to=[user.email])
             email.send()
             payload["message"]="Your password has been sent to your registered email."
             payload['status'] = status.HTTP_200_OK
