@@ -34,7 +34,7 @@ class AddToCartSerializer(serializers.ModelSerializer):
 
     class Meta:
         model = AddToCart
-        fields = ("shoe", "user", "items", "price", "status")
+        fields = ("id","shoe", "user", "items", "price", "status")
 
     # def update(self, instance, validated_data):
     #     """

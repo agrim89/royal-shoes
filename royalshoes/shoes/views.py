@@ -33,6 +33,7 @@ class PasswordUpdate(APIView):
 
 class ForgotPassword(APIView):
     def post(self, request):
+        import pdb;pdb.set_trace()
         payload = {}
         try:
             mobile = request.data["mobile"]
@@ -148,17 +149,12 @@ class ShoesViewSet(APIView):
 
 
 class AddToCartViewSet(APIView):
-    def get_object(self, id):
-        try:
-            return AddToCart.objects.get(id=id)
-        except Exception:
-            return Response(status=status.HTTP_404_NOT_FOUND)
 
     def get(self, request):
         try:
             response = []
-            id = request.GET['id']
-            user = Registration.objects.get(id=id)
+            id = request.GET['mobile']
+            user = Registration.objects.get(mobile=id)
             cart = AddToCart.objects.filter(user=user, status=True)
             for d in cart:
                 response.append(ShoeSerializer(d.shoe).data)
@@ -170,10 +166,10 @@ class AddToCartViewSet(APIView):
 
     def post(self, request):
         try:
-            user_id = request.data["user"]
+            mobile = request.data["mobile"]
             shoe_id = request.data["shoe"]
-            items = request.data['items']
-            user = Registration.objects.get(id=user_id)
+            items = request.data['quantity']
+            user = Registration.objects.get(mobile=mobile)
             shoes = ShoeList.objects.get(id=shoe_id)
             serializer = AddToCart(user=user, items=items, shoe=shoes, price=shoes.price * items,
                                    date=datetime.datetime.now().date())
@@ -186,7 +182,7 @@ class AddToCartViewSet(APIView):
         try:
             id = request.data['id']
             cart = self.get_object(id)
-            items = request.data.get("items", cart.items)
+            items = request.data.get("quantity", cart.items)
             cart.price = items * cart.shoe.price
             cart.items = items
             cart.date = datetime.datetime.now().date()
