@@ -169,13 +169,17 @@ class AddToCartViewSet(APIView):
             id = request.GET['mobile']
             user = Registration.objects.get(mobile=id)
             cart = AddToCart.objects.filter(user=user, status=True)
+            # payable = sum(AddToCart.objects.filter(user=user, status=True).values_list("price"))
+            payable = 0
             if cart:
                 for d in cart:
                     values = ShoeSerializer(d.shoe).data
                     values['quantity'] = d.items
                     values['cart_id'] = d.id
+                    payable = payable + d.price
                     response.append(values)
-                return Response(response, status=status.HTTP_200_OK)
+                payload = dict(response = response, amount_payable = payable)
+                return Response(payload, status=status.HTTP_200_OK)
             else:
                 return Response(dict(message='No items in cart. Please add to view.'), status=status.HTTP_200_OK)
         except Exception:
