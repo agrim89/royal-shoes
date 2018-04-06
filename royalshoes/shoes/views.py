@@ -202,7 +202,7 @@ class AddToCartViewSet(APIView):
                 values.save()
                 return Response(AddToCartSerializer(values).data, status=status.HTTP_201_CREATED)
             else:
-                serializer = AddToCart(user=user, items=items, shoe=shoes, price=shoes.price * items,
+                serializer = AddToCart(user=user, items=items, shoe=shoes, price=shoes.price * values.items,
                                        date=datetime.datetime.now().date())
                 serializer.save()
             return Response(AddToCartSerializer(serializer).data, status=status.HTTP_201_CREATED)
