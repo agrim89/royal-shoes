@@ -195,7 +195,7 @@ class AddToCartViewSet(APIView):
                 if values.items > 5:
                     values.items = items
                 else:
-                    values.items = values.items + items
+                    values.items = values.items + items if values.items <=5 else items
                 values.save()
                 return Response(AddToCartSerializer(values).data, status=status.HTTP_201_CREATED)
             else:
