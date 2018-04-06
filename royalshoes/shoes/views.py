@@ -199,10 +199,11 @@ class AddToCartViewSet(APIView):
                         values.items = 5
                     else:
                         values.items = values.items + items if items < 5 else items
+                values.price = shoes.price * values.items
                 values.save()
                 return Response(AddToCartSerializer(values).data, status=status.HTTP_201_CREATED)
             else:
-                serializer = AddToCart(user=user, items=items, shoe=shoes, price=shoes.price * values.items,
+                serializer = AddToCart(user=user, items=items, shoe=shoes, price=shoes.price * items,
                                        date=datetime.datetime.now().date())
                 serializer.save()
             return Response(AddToCartSerializer(serializer).data, status=status.HTTP_201_CREATED)
