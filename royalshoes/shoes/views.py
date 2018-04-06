@@ -192,7 +192,10 @@ class AddToCartViewSet(APIView):
             values = AddToCart.objects.filter(user=user, shoe=shoes)
             if values:
                 values = values[0]
-                values.items = values.items + items
+                if values.items > 5:
+                    values.items = items
+                else:
+                    values.items = values.items + items
                 values.save()
                 return Response(AddToCartSerializer(values).data, status=status.HTTP_201_CREATED)
             else:
@@ -212,6 +215,19 @@ class AddToCartViewSet(APIView):
             cart.price = cart.items * cart.shoe.price
 
             cart.date = datetime.datetime.now().date()
+            cart.save()
+            return Response(AddToCartSerializer(cart).data, status=status.HTTP_202_ACCEPTED)
+        except Exception:
+            return Response(status=status.HTTP_400_BAD_REQUEST)
+
+
+class DeleteCart(APIView):
+    def post(self, request):
+
+        try:
+            id = request.data['id']
+            cart = AddToCart.objects.get(id=id)
+            cart.status = False
             cart.save()
             return Response(AddToCartSerializer(cart).data, status=status.HTTP_202_ACCEPTED)
         except Exception:

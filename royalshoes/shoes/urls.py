@@ -10,4 +10,5 @@ urlpatterns = [
     path('cart/', views.AddToCartViewSet.as_view(), name='add_to_cart'),
     path('update_password/', views.PasswordUpdate.as_view(), name='password'),
     path('forgot_password/', views.ForgotPassword.as_view(), name='forgot_password'),
+    path('delete_cart/', views.DeleteCart.as_view(), name='cart_delete'),
 ]
