@@ -211,6 +211,7 @@ class AddToCartViewSet(APIView):
                 else:
                     values.status = True
                     values.items = items
+                    values.price = items * shoes.price
                     values.save()
                 return Response(AddToCartSerializer(values).data, status=status.HTTP_201_CREATED)
             else:
