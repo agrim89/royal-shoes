@@ -210,6 +210,7 @@ class AddToCartViewSet(APIView):
                     values.save()
                 else:
                     values.status = True
+                    values.items = items
                     values.save()
                 return Response(AddToCartSerializer(values).data, status=status.HTTP_201_CREATED)
             else:
