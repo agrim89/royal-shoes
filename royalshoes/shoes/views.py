@@ -194,7 +194,7 @@ class AddToCartViewSet(APIView):
             user = Registration.objects.get(mobile=mobile)
             shoes = ShoeList.objects.get(id=shoe_id)
             values = AddToCart.objects.filter(user=user, shoe=shoes)
-            if values and values.status == True:
+            if values:
                 values = values[0]
                 if values.items > 5:
                     values.items = items
@@ -206,10 +206,6 @@ class AddToCartViewSet(APIView):
                 values.price = shoes.price * values.items
                 values.save()
                 return Response(AddToCartSerializer(values).data, status=status.HTTP_201_CREATED)
-            elif values and values.status == False:
-                values.status = True
-                values.items = items
-                values.save()
             else:
                 serializer = AddToCart(user=user, items=items, shoe=shoes, price=shoes.price * items,
                                        date=datetime.datetime.now().date())
