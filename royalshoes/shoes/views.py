@@ -194,17 +194,23 @@ class AddToCartViewSet(APIView):
             user = Registration.objects.get(mobile=mobile)
             shoes = ShoeList.objects.get(id=shoe_id)
             values = AddToCart.objects.filter(user=user, shoe=shoes)
+            # import pdb;pdb.set_trace()
             if values:
                 values = values[0]
-                if values.items > 5:
-                    values.items = items
-                else:
-                    if values.items + items > 5:
-                        values.items = 5
+
+                if values.status == True:
+                    if values.items > 5:
+                        values.items = items
                     else:
-                        values.items = values.items + items if items < 5 else items
-                values.price = shoes.price * values.items
-                values.save()
+                        if values.items + items > 5:
+                            values.items = 5
+                        else:
+                            values.items = values.items + items if items < 5 else items
+                    values.price = shoes.price * values.items
+                    values.save()
+                else:
+                    values.status = True
+                    values.save()
                 return Response(AddToCartSerializer(values).data, status=status.HTTP_201_CREATED)
             else:
                 serializer = AddToCart(user=user, items=items, shoe=shoes, price=shoes.price * items,
